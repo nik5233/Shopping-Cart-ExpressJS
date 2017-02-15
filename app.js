@@ -8,6 +8,8 @@ var expressHbs = require('express-handlebars');
 var mongoose = require('mongoose');
 var dbUrl = require('./models/mongo.config');
 var session = require('express-session');
+var passport = require('passport');
+var flash = require('connect-flash');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -17,6 +19,7 @@ var app = express();
 mongoose.connect(dbUrl, () => {
     console.log(`Connected with DataBase: ${dbUrl}`);
 });
+require('./config/passport');
 
 // view engine setup
 app.engine('.hbs', expressHbs({
@@ -35,7 +38,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     secret: '7hbt72E1nJ5ob4Vm'
-}))
+}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
