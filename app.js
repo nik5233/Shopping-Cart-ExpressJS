@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var expressHbs = require('express-handlebars');
 var mongoose = require('mongoose');
 var dbUrl = require('./models/mongo.config');
+var session = require('express-session');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -18,7 +19,10 @@ mongoose.connect(dbUrl, () => {
 });
 
 // view engine setup
-app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
+app.engine('.hbs', expressHbs({
+    defaultLayout: 'layout',
+    extname: '.hbs'
+}));
 app.set('view engine', '.hbs');
 
 // uncomment after placing your favicon in /public
@@ -27,10 +31,15 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: '7hbt72E1nJ5ob4Vm'
+}))
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/user', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
