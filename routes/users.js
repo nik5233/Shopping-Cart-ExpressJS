@@ -5,6 +5,7 @@ var passport = require('passport');
 
 var Order = require('../models/order');
 var Cart = require('../models/cart');
+var User = require('../models/users');
 
 var csrfProtection = csrf();
 router.use(csrfProtection);
@@ -22,7 +23,60 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
         });
         res.render('user/profile', {
             title: 'Profile',
-            orders: orders
+            orders: orders,
+            user: req.user
+        });
+    });
+});
+
+router.get('/update', isLoggedIn, function(req, res, next) {
+    res.render('user/update', {
+        title: 'Update Profile',
+        csrfToken: req.csrfToken(),
+        user: req.user
+    });
+});
+
+router.post('/update', isLoggedIn, function(req, res, next) {
+    var newUser = req.body;
+    var user = req.user;
+    // Telephone
+    if (newUser.telephone !== user.telephone) {
+        var reg = /\D/gi;
+        var tel = newUser.telephone.trim().replace(reg, '');
+        if (tel.length > 10) {
+            var len = tel.length;
+            tel = tel.slice(len - 10, len);
+        }
+        user.telephone = tel;
+    }
+    // Card
+    if (newUser.number !== user.card.number) {
+        user.card.name = newUser.name.toLowerCase();
+        user.card.number = +newUser.number;
+        user.card.month = +newUser.month;
+        user.card.year = +newUser.year;
+        user.card.cvc = +newUser.cvc;
+    }
+    // Address
+    if (newUser.country !== user.address.country) {
+        user.address.country = newUser.country.toLowerCase();
+        user.address.region = newUser.region.toLowerCase();
+        user.address.city = newUser.city.toLowerCase();
+        user.address.zip = +newUser.zip;
+        user.address.street = newUser.street.toLowerCase();
+        user.address.building = newUser.building;
+        user.address.appartament = newUser.appartament;
+    }
+    User.findById(user._id, (err, data) => {
+        if (err) {
+            res.redirect('/user/update');
+        }
+        data.update(user, (err, result) => {
+            if (err) {
+                res.write(err);
+            }
+            res.redirect('/user/profile');
         });
     });
 });

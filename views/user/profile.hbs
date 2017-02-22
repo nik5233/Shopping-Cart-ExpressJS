@@ -1,6 +1,15 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         <h1>User Profile</h1>
+        <div>
+            <h2>Email: {{user.email}}</h2>
+            <p>Password: {{user.password}}</p>
+            <p>Status: {{user.status}}</p>
+            <p>Telephone: {{user.telephone}}</p>
+            {{!--<p>Card: {{user.card}}</p>--}}
+            <p>Addres: {{user.address.street}} {{user.address.building}}{{#if user.address.appartament}}/{{user.address.appartament}}{{/if}} {{user.address.city}},{{user.address.region}} {{user.address.zip}} {{user.address.country}}</p>
+        </div>
+        <a href="/user/update" type="button">Update Profile</a>
         <hr>
         <h2>My Orders</h2>
         {{#each orders}}
