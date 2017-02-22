@@ -29,55 +29,114 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
     });
 });
 
-router.get('/update', isLoggedIn, function(req, res, next) {
+router.get('/update/:id', isLoggedIn, function(req, res, next) {
     res.render('user/update', {
         title: 'Update Profile',
         csrfToken: req.csrfToken(),
-        user: req.user
+        user: req.user,
+        account: req.params.id == 'account',
+        address: req.params.id == 'address',
+        card: req.params.id == 'card',
+        path: req.params.id
     });
 });
 
-router.post('/update', isLoggedIn, function(req, res, next) {
-    var newUser = req.body;
-    var user = req.user;
-    // Telephone
-    if (newUser.telephone !== user.telephone) {
-        var reg = /\D/gi;
-        var tel = newUser.telephone.trim().replace(reg, '');
-        if (tel.length > 10) {
-            var len = tel.length;
-            tel = tel.slice(len - 10, len);
-        }
-        user.telephone = tel;
-    }
-    // Card
-    if (newUser.number !== user.card.number) {
-        user.card.name = newUser.name.toLowerCase();
-        user.card.number = +newUser.number;
-        user.card.month = +newUser.month;
-        user.card.year = +newUser.year;
-        user.card.cvc = +newUser.cvc;
-    }
-    // Address
-    if (newUser.country !== user.address.country) {
-        user.address.country = newUser.country.toLowerCase();
-        user.address.region = newUser.region.toLowerCase();
-        user.address.city = newUser.city.toLowerCase();
-        user.address.zip = +newUser.zip;
-        user.address.street = newUser.street.toLowerCase();
-        user.address.building = newUser.building;
-        user.address.appartament = newUser.appartament;
-    }
-    User.findById(user._id, (err, data) => {
+router.post('/update/:id', isLoggedIn, function(req, res, next) {
+    var formName = req.params.id;
+    var newUser = req.body; // Array
+    var curUser = req.user;
+
+    User.findOne(curUser._id, function(err, user) {
         if (err) {
-            res.redirect('/user/update');
+            res.redirect('/');
         }
-        data.update(user, (err, result) => {
-            if (err) {
-                res.write(err);
+        if (formName === 'account') {
+            if (curUser.email !== newUser.email) {
+                curUser.email = newUser.email;
             }
-            res.redirect('/user/profile');
-        });
+
+            if (newUser.password[0]) {
+                console.log('Password not empty');
+                if (user.validPassword(newUser.password[0])) {
+                    console.log('Password checked');
+                    if (newUser.password[1] == newUser.password[2]) {
+                        curUser.password = user.encryptPassword(newUser.password[1]);
+                        console.log('Password updated');
+                    }
+                }
+            }
+
+            if (newUser.telephone !== curUser.telephone) {
+                var reg = /\D/gi;
+                var tel = newUser.telephone.trim().replace(reg, '');
+                if (tel.length > 10) {
+                    var len = tel.length;
+                    tel = tel.slice(len - 10, len);
+                }
+                curUser.telephone = tel;
+            }
+            user.update(curUser, (err, result) => {
+                if (err) {
+                    console.log("Error");
+                }
+                console.log("Saved");
+                res.redirect('/user/profile');
+            });
+        }
+        if (formName === 'address') {
+            if (curUser.address.country !== newUser.country) {
+                curUser.address.country = newUser.country;
+            }
+            if (curUser.address.region !== newUser.region) {
+                curUser.address.region = newUser.region;
+            }
+            if (curUser.address.city !== newUser.city) {
+                curUser.address.city = newUser.city;
+            }
+            if (curUser.address.zip !== newUser.zip) {
+                curUser.address.zip = newUser.zip;
+            }
+            if (curUser.address.street !== newUser.street) {
+                curUser.address.street = newUser.street;
+            }
+            if (curUser.address.building !== newUser.building) {
+                curUser.address.building = newUser.building;
+            }
+            if (curUser.address.appartament !== newUser.appartament) {
+                curUser.address.appartament = newUser.appartament;
+            }
+            user.update(curUser, (err, result) => {
+                if (err) {
+                    console.log("Error");
+                }
+                console.log(result);
+                res.redirect('/user/profile');
+            });
+        }
+        if (formName === 'card') {
+            if (curUser.card.name !== newUser.name) {
+                curUser.card.name = newUser.name;
+            }
+            if (curUser.card.number !== newUser.number) {
+                curUser.card.number = newUser.number;
+            }
+            if (curUser.card.month !== newUser.month) {
+                curUser.card.month = newUser.month;
+            }
+            if (curUser.card.year !== newUser.year) {
+                curUser.card.year = newUser.year;
+            }
+            if (curUser.card.cvc !== newUser.cvc) {
+                curUser.card.cvc = newUser.cvc;
+            }
+            user.update(curUser, (err, result) => {
+                if (err) {
+                    console.log("Error");
+                }
+                console.log(result);
+                res.redirect('/user/profile');
+            });
+        }
     });
 });
 

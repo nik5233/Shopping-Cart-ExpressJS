@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <h1>Update Profile</h1>
-        <form action="/user/update" method="post">
-            <h3>Profile</h3>
+        <form action="/user/update/{{path}}" method="post">
+        {{#if account}}
+            <h1>Update Account</h1>
             <div class="form-group">
                 <label for="email">E-Mail</label>
                 <input type="email" id="email" name="email" class="form-control" value="{{user.email}}">
@@ -15,11 +15,13 @@
                 <label for="password">Confirm Password</label>
                 <input type="password" id="password" name="password" class="form-control">
             </div>
-            <h3>Contacts</h3>
             <div class="form-group">
                 <label for="telephone">Telephone</label>
                 <input type="tel" id="telephone" name="telephone" class="form-control" value="{{user.telephone}}">
             </div>
+        {{/if}}
+        {{#if address}}
+            <h1>Update Contacts</h1>
             <div class="form-group">
                 <label for="country">Country</label>
                 <input type="text" id="country" name="country" class="form-control" value="{{user.address.country}}">
@@ -36,7 +38,9 @@
                 <label for="appartament">Appartament</label>
                 <input type="text" id="appartament" name="appartament" class="form-control" value="{{user.address.appartament}}">
             </div>
-            <h3>Card</h3>
+            {{/if}}
+            {{#if card}}
+            <h1>Update Card</h1>
             <div class="form-group">
                 <label for="name">Cardholder Name</label>
                 <input type="text" id="name" name="name" class="form-control" value="{{user.card.name}}">
@@ -49,6 +53,7 @@
                 <label for="cvc">CVC</label>
                 <input type="text" id="cvc" name="cvc" class="form-control" value="{{user.card.cvc}}">
             </div>
+            {{/if}}
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
             <button type="submit" class="btn btn-primary">Update</button>
         </form>
