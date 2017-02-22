@@ -1,0 +1,56 @@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h1>Update Profile</h1>
+        <form action="/user/update" method="post">
+            <h3>Profile</h3>
+            <div class="form-group">
+                <label for="email">E-Mail</label>
+                <input type="email" id="email" name="email" class="form-control" value="{{user.email}}">
+            </div>
+            <div class="form-group">
+                <label for="password">Old Password</label>
+                <input type="password" id="password" name="password" class="form-control">
+                <label for="password">New Password</label>
+                <input type="password" id="password" name="password" class="form-control">
+                <label for="password">Confirm Password</label>
+                <input type="password" id="password" name="password" class="form-control">
+            </div>
+            <h3>Contacts</h3>
+            <div class="form-group">
+                <label for="telephone">Telephone</label>
+                <input type="tel" id="telephone" name="telephone" class="form-control" value="{{user.telephone}}">
+            </div>
+            <div class="form-group">
+                <label for="country">Country</label>
+                <input type="text" id="country" name="country" class="form-control" value="{{user.address.country}}">
+                <label for="region">Region</label>
+                <input type="text" id="region" name="region" class="form-control" value="{{user.address.region}}">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" class="form-control" value="{{user.address.city}}">
+                <label for="zip">Zip</label>
+                <input type="text" id="zip" name="zip" class="form-control" value="{{user.address.zip}}">
+                <label for="street">Street</label>
+                <input type="text" id="street" name="street" class="form-control" value="{{user.address.street}}">
+                <label for="building">Building</label>
+                <input type="text" id="building" name="building" class="form-control" value="{{user.address.building}}">
+                <label for="appartament">Appartament</label>
+                <input type="text" id="appartament" name="appartament" class="form-control" value="{{user.address.appartament}}">
+            </div>
+            <h3>Card</h3>
+            <div class="form-group">
+                <label for="name">Cardholder Name</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{user.card.name}}">
+                <label for="number">Card Number</label>
+                <input type="text" id="number" name="number" class="form-control" value="{{user.card.number}}">
+                <label for="month">Expiration Month</label>
+                <input type="text" id="month" name="month" class="form-control" value="{{user.card.month}}">
+                <label for="year">Expiration Year</label>
+                <input type="text" id="year" name="year" class="form-control" value="{{user.card.year}}">
+                <label for="cvc">CVC</label>
+                <input type="text" id="cvc" name="cvc" class="form-control" value="{{user.card.cvc}}">
+            </div>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</div>
