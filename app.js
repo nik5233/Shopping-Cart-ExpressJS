@@ -15,6 +15,7 @@ var MongoStore = require('connect-mongo')(session);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var dashboard = require('./routes/dashboard');
 
 var app = express();
 
@@ -52,11 +53,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req, res, next) {
     res.locals.login = req.isAuthenticated();
     res.locals.session = req.session;
+    if (res.locals.login) {
+        res.locals.admin = req.user.status === 'admin';
+        res.locals.staff = req.user.status === 'staff';
+    }
     next();
 });
 
 app.use('/', index);
 app.use('/user', users);
+app.use('/dashboard', dashboard);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
