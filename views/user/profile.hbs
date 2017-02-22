@@ -1,15 +1,33 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <h1>User Profile</h1>
+        <h1>My Profile</h1>
+        <hr>
+        <h3>Account</h3>
         <div>
-            <h2>Email: {{user.email}}</h2>
-            <p>Password: {{user.password}}</p>
-            <p>Status: {{user.status}}</p>
+            <p>Email: {{user.email}}</p>
+            {{#if user.telephone}}
             <p>Telephone: {{user.telephone}}</p>
-            {{!--<p>Card: {{user.card}}</p>--}}
-            <p>Addres: {{user.address.street}} {{user.address.building}}{{#if user.address.appartament}}/{{user.address.appartament}}{{/if}} {{user.address.city}},{{user.address.region}} {{user.address.zip}} {{user.address.country}}</p>
+            {{/if}}
+            
         </div>
-        <a href="/user/update" type="button">Update Profile</a>
+        <a href="/user/update/account" type="button" class="btn btn-success">Update Account</a>
+        <hr>
+        <h3>Address</h3>
+        <div>
+            {{#if user.address.street}}
+            <p>Addres: 
+                {{user.address.street}} {{user.address.building}}{{#if user.address.appartament}}/{{user.address.appartament}}{{/if}} {{user.address.city}},{{user.address.region}} {{user.address.zip}} {{user.address.country}}</p>
+                {{else}}
+                <p class="alert alert-warning">Please, assign your address for delivery</p>
+                {{/if}}
+        </div>
+        <a href="/user/update/address" type="button" class="btn btn-success">Update Address</a>
+        <hr>
+        <h3>Card</h3>
+        <div>
+            <p>Card: {{user.card.number}}</p>
+        </div>
+        <a href="/user/update/card" type="button" class="btn btn-success">Update Card</a>
         <hr>
         <h2>My Orders</h2>
         {{#each orders}}
