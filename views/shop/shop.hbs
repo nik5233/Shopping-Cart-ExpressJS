@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+    <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+      {{successMsg}}
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">{{!--Offers and Promotion--}}
+    <h2>Offers and Promotion</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">{{!--Filter Field | Separate File: Sidebar--}}
+    <h2>Search and Filter</h2>
+  </div>
+  <div class="col-md-9 flexbox">{{!--Products List--}}
+    {{# each products}}
+      <div class="product">
+        <div class="caption">
+          <img src="{{this.imagePath}}" alt="...">
+        </div>
+        <a class="badg" href="#"><i class="fa fa-heart" aria-hidden="true"></i></a>
+        <div class="description">
+          <h3>{{this.title}}</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ab ex eos quos itaque iusto qui, assumenda eveniet obcaecati fugiat.</p>
+          <a href="/shop/product/{{this._id}}">more detail</a>
+        </div>
+        <div class="price"><small><i class="fa fa-usd" aria-hidden="true"></i></small><strong>{{this.price}}</strong></div>
+        <form action="/shop/cart/{{this._id}}" method="post" id="{{this._id}}">{{!--Buy Now || Add to Cart--}}
+          <input id="pc{{this._id}}" type="radio" name="platform" value="pc" hidden required>
+          <label class="label" for="pc{{this._id}}">PC</label>
+          <input id="psp{{this._id}}" type="radio" name="platform" value="psp" hidden required>
+          <label class="label" for="psp{{this._id}}">PSP</label>
+          <input id="xbox{{this._id}}" type="radio" name="platform" value="xbox" hidden required>
+          <label class="label" for="xbox{{this._id}}">XBOX</label>
+        </form>
+        <button class="buy btn btn-success" type="submit" form="{{this._id}}">
+          ADD TO CART <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    {{/each}}
+  </div>
+</div>

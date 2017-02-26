@@ -12,6 +12,8 @@ router.use(csrfProtection);
 
 /* User Profile */
 router.get('/profile', isLoggedIn, function(req, res, next) {
+    var errMsg = req.flash('error');
+    var sucMsg = req.flash('success');
     Order.find({ user: req.user }, (err, orders) => {
         if (err) {
             res.write('Error!');
@@ -24,12 +26,18 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
         res.render('user/profile', {
             title: 'Profile',
             orders: orders,
+            errMsg: errMsg,
+            hasError: errMsg.length > 0,
+            sucMsg: sucMsg,
+            hasSuccess: sucMsg.length > 0,
             user: req.user
         });
     });
 });
 
 router.get('/update/:id', isLoggedIn, function(req, res, next) {
+    var errMsg = req.flash('error');
+    var sucMsg = req.flash('success');
     res.render('user/update', {
         title: 'Update Profile',
         csrfToken: req.csrfToken(),
@@ -37,7 +45,11 @@ router.get('/update/:id', isLoggedIn, function(req, res, next) {
         account: req.params.id == 'account',
         address: req.params.id == 'address',
         card: req.params.id == 'card',
-        path: req.params.id
+        path: req.params.id,
+        errMsg: errMsg,
+        hasError: errMsg.length > 0,
+        sucMsg: sucMsg,
+        hasSuccess: sucMsg.length > 0,
     });
 });
 
@@ -45,24 +57,30 @@ router.post('/update/:id', isLoggedIn, function(req, res, next) {
     var formName = req.params.id;
     var newUser = req.body; // Array
     var curUser = req.user;
+    var isUpdated = false;
 
     User.findOne(curUser._id, function(err, user) {
         if (err) {
-            res.redirect('/');
+            req.flash('error', err.message);
+            res.redirect('/user/profile');
         }
+
         if (formName === 'account') {
             if (curUser.email !== newUser.email) {
                 curUser.email = newUser.email;
+                isUpdated = true;
             }
 
             if (newUser.password[0]) {
-                console.log('Password not empty');
+                isUpdated = true;
                 if (user.validPassword(newUser.password[0])) {
-                    console.log('Password checked');
                     if (newUser.password[1] == newUser.password[2]) {
                         curUser.password = user.encryptPassword(newUser.password[1]);
-                        console.log('Password updated');
+                    } else {
+                        req.flash('error', 'New passwords not match.');
                     }
+                } else {
+                    req.flash('error', 'Wrong password.');
                 }
             }
 
@@ -74,68 +92,18 @@ router.post('/update/:id', isLoggedIn, function(req, res, next) {
                     tel = tel.slice(len - 10, len);
                 }
                 curUser.telephone = tel;
+                isUpdated = true;
             }
-            user.update(curUser, (err, result) => {
-                if (err) {
-                    console.log("Error");
+            updateUser(isUpdated, user, curUser, req, res);
+        } else {
+            for (var key in newUser) {
+                var element = newUser[key];
+                if (curUser[formName][key] !== element && key !== '_csrf') {
+                    curUser[formName][key] = element;
+                    isUpdated = true;
                 }
-                console.log("Saved");
-                res.redirect('/user/profile');
-            });
-        }
-        if (formName === 'address') {
-            if (curUser.address.country !== newUser.country) {
-                curUser.address.country = newUser.country;
             }
-            if (curUser.address.region !== newUser.region) {
-                curUser.address.region = newUser.region;
-            }
-            if (curUser.address.city !== newUser.city) {
-                curUser.address.city = newUser.city;
-            }
-            if (curUser.address.zip !== newUser.zip) {
-                curUser.address.zip = newUser.zip;
-            }
-            if (curUser.address.street !== newUser.street) {
-                curUser.address.street = newUser.street;
-            }
-            if (curUser.address.building !== newUser.building) {
-                curUser.address.building = newUser.building;
-            }
-            if (curUser.address.appartament !== newUser.appartament) {
-                curUser.address.appartament = newUser.appartament;
-            }
-            user.update(curUser, (err, result) => {
-                if (err) {
-                    console.log("Error");
-                }
-                console.log(result);
-                res.redirect('/user/profile');
-            });
-        }
-        if (formName === 'card') {
-            if (curUser.card.name !== newUser.name) {
-                curUser.card.name = newUser.name;
-            }
-            if (curUser.card.number !== newUser.number) {
-                curUser.card.number = newUser.number;
-            }
-            if (curUser.card.month !== newUser.month) {
-                curUser.card.month = newUser.month;
-            }
-            if (curUser.card.year !== newUser.year) {
-                curUser.card.year = newUser.year;
-            }
-            if (curUser.card.cvc !== newUser.cvc) {
-                curUser.card.cvc = newUser.cvc;
-            }
-            user.update(curUser, (err, result) => {
-                if (err) {
-                    console.log("Error");
-                }
-                console.log(result);
-                res.redirect('/user/profile');
-            });
+            updateUser(isUpdated, user, curUser, req, res);
         }
     });
 });
@@ -211,4 +179,29 @@ function notLoggedIn(req, res, next) {
         return next();
     }
     res.redirect('/');
+}
+
+function updateUser(isUpdated, user, curUser, req, res) {
+    var errMsg = req.flash('error');
+    if (isUpdated) {
+        if (errMsg[0] == 'New passwords not match.' || errMsg[0] == 'Wrong password.') {
+            console.log('Redirect to account update');
+            req.flash('error', errMsg[0]);
+            res.redirect('/user/update/account');
+        } else {
+            console.log('Redirect to profile');
+            user.update(curUser, (err, result) => {
+                if (err) {
+                    req.flash('error', err.message);
+                    res.redirect('/user/profile');
+                } else {
+                    req.flash('success', `${req.params.id} was updated.`);
+                    res.redirect('/user/profile');
+                }
+            });
+        }
+    } else {
+        req.flash('success', 'No changes.');
+        res.redirect('/user/profile');
+    }
 }

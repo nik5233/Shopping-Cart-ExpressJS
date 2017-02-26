@@ -1,20 +1,140 @@
-.thumbnail img {
-  width: 100%;
-  border-radius: 4px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, .8);
+@import "./product.css";
+@import "./footer.css";
+html {
+  height: 100%;
 }
 
-.thumbnail .description {
-  color: #7f7f7f;
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+body>section {
+  padding-bottom: 240px;
+}
+
+.flexbox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.product {
+  margin: 3px;
+  flex: 0 1 225px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.65);
+  background: rgb(127, 136, 146);
+}
+
+.product form {
+  margin-bottom: 25px;
+}
+
+.buy {
+  position: absolute;
+  width: 80%;
+  bottom: -17px;
+  left: 10%;
+  right: 10%;
 }
 
 .price {
-  padding: 6px;
-  font-weight: bold;
-  font-size: 16px;
+  font-size: 24px;
+  align-self: center;
 }
 
-.navbar,
-.navbar-default {
-  border-radius: 0px!important
+.price small {
+  vertical-align: text-top;
+  font-size: medium;
+  color: lightgrey;
+}
+
+
+/* CSS HOVER */
+
+.caption {
+  border-radius: 5px 5px 0 0;
+  position: relative;
+  height: 280px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.product img {
+  border-radius: 5px 5px 0 0;
+  height: 280px;
+  width: 100%;
+}
+
+.product:hover img {
+  transform: scale(1.15, 1.15);
+}
+
+.product:hover .description {
+  border-radius: 5px 5px 0 0;
+  opacity: 1;
+}
+
+.product img {
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  -ms-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+}
+
+.description {
+  border-radius: 5px 5px 0 0;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.65);
+  width: 225px;
+  height: 280px;
+  overflow: hidden;
+  position: absolute;
+  -webkit-transition: all 0.45s ease-in-out;
+  -moz-transition: all 0.45s ease-in-out;
+  -o-transition: all 0.45s ease-in-out;
+  -ms-transition: all 0.45s ease-in-out;
+  transition: all 0.45s ease-in-out;
+}
+
+.description h3,
+.description p,
+.description a {
+  color: white;
+}
+
+.description h3 {
+  text-transform: uppercase;
+  background: black;
+  text-align: center;
+}
+
+.description p {
+  padding: 5px;
+}
+
+.description a {
+  text-transform: uppercase;
+  display: table;
+  margin: 0 auto;
+}
+
+.badg {
+  z-index: 2;
+  background: hotpink;
+  color: white;
+  border-radius: 100%!important;
+  padding: 6px 9px;
+  position: absolute;
+  top: 264px;
+  right: 20px;
 }

@@ -16,6 +16,8 @@ var MongoStore = require('connect-mongo')(session);
 var index = require('./routes/index');
 var users = require('./routes/users');
 var dashboard = require('./routes/dashboard');
+var product = require('./routes/product');
+var cart = require('./routes/cart');
 
 var app = express();
 
@@ -61,6 +63,8 @@ app.use(function(req, res, next) {
 });
 
 app.use('/', index);
+app.use('/shop', product);
+app.use('/cart', cart);
 app.use('/user', users);
 app.use('/dashboard', dashboard);
 

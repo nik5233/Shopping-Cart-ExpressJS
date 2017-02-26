@@ -1,0 +1,57 @@
+<article>
+    <header class="row">
+        <div class="col-md-10 col-md-offset-1 cart-product">
+            <img src="{{product.imagePath}}" alt="...">
+            <h1>{{product.title}}</h1>
+            <form action="/shop/cart/{{product._id}}" method="post">
+                <section id="platform">
+                    <span>Platform:</span>
+                    <input id="pc" type="radio" name="platform" value="pc" required hidden>
+                    <label class="label label-default" for="pc">PC</label>
+                    <input id="psp" type="radio" name="platform" value="psp" required hidden>
+                    <label class="label label-default" for="psp">PSP4</label>
+                    <input id="xbox" type="radio" name="platform" value="xbox" required hidden>
+                    <label class="label label-default" for="xbox">XBOX</label>
+                    <span class="msg">check one of this</span>
+                </section>
+                <section id="addon">
+                    <span>Addons:</span>
+                    <input id="add#1" type="checkbox" name="addon" value="addon1">
+                    <label class="label label-default" for="add#1">Burning Crusader</label>
+                    <input id="add#2" type="checkbox" name="addon" value="addon2">
+                    <label class="label label-default" for="add#2">Lich King</label>
+                    <input id="add#3" type="checkbox" name="addon" value="addon3">
+                    <label class="label label-default" for="add#3">Cataclysm</label>
+                </section>
+                <section id="qty">
+                    <span>Qty:</span>
+                    <input type="number" step="1" name="qty" min="1" value="1">
+                </section>
+                <p class="price"><small><i class="fa fa-usd" aria-hidden="true"></i></small><strong>{{product.price}}</strong></p>
+                <button class="btn btn-success" type="submit">Add to Cart</button>
+                <a class="btn btn-success" href="#">{{!--/add/:id--}}
+                    Buy Now
+                </a>
+            </form>
+        </div>
+    </header>
+    <hr>
+    <section class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <section>
+                <h3>Description</h3>
+                <p>{{product.description}}</p>
+            </section>
+            <section>
+                <h3>Details</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis facere natus ad voluptatum aliquid, tempora libero vero quaerat minus, rem tempore maiores ab suscipit praesentium sint. Quibusdam mollitia nisi aliquid.</p>
+            </section>
+            <section>
+                <h3>Reviews</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, inventore quaerat esse accusantium harum obcaecati dolores voluptate nesciunt reprehenderit sunt.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi iure velit architecto optio vel est consequuntur voluptates, explicabo consequatur quia!</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum quis debitis commodi praesentium animi at officia nam placeat, provident corporis.</p>
+            </section>
+        </div>
+    </section>
+</article>
