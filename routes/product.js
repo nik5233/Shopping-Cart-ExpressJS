@@ -26,8 +26,9 @@ router.get('/product/:id', function(req, res, next) {
         if (err) {
             res.redirect('/');
         }
+        console.log(product);
         res.render('shop/product', {
-            title: 'PRODUCT_TITLE',
+            title: product.title,
             product: product
         });
     });
