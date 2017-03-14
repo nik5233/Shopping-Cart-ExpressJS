@@ -1,5 +1,6 @@
 @import "./product.css";
 @import "./footer.css";
+@import "./header.css";
 html {
   height: 100%;
 }
@@ -12,7 +13,7 @@ body {
 }
 
 body>section {
-  padding-bottom: 240px;
+  padding-bottom: 300px;
 }
 
 .flexbox {

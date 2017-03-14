@@ -11,7 +11,7 @@
 
 /* Form */
 
-#platform>input:checked~.msg {
+input:checked~.msg {
   display: none;
 }
 
@@ -20,11 +20,12 @@ input:checked+label {
   color: white;
 }
 
-#platform>input:invalid~.msg {
+input:invalid~.msg {
   color: red;
   text-transform: capitalize;
-  font-weight: 600;
-  padding: 5px;
+  margin: 0 auto;
+  width: 100px;
+  padding: 2px;
   border-radius: 3px;
   background: lightpink
 }

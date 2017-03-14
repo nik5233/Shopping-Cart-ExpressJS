@@ -6,24 +6,32 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressHbs = require('express-handlebars');
 var mongoose = require('mongoose');
-var dbUrl = require('./models/mongo.config');
 var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
 var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
+var debug = require('debug')('mongoose');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 var dashboard = require('./routes/dashboard');
 var product = require('./routes/product');
 var cart = require('./routes/cart');
+var Wish = require('./models/wish');
 
 var app = express();
+var env = app.get('env');
+var db = require('./config/app.config')[env].db.url();
 
-mongoose.connect(dbUrl, () => {
-    console.log(`Connected with DataBase: ${dbUrl}`);
+if (env !== 'production') {
+    // config app
+}
+
+mongoose.connect(db, () => {
+    debug(`Connected with DataBase: %s`, db);
 });
+
 require('./config/passport');
 
 // view engine setup
@@ -53,9 +61,16 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next) {
+    res.locals.notProd = env !== 'production';
     res.locals.login = req.isAuthenticated();
     res.locals.session = req.session;
     if (res.locals.login) {
+        Wish.find({ 'user': req.user._id }, (err, wish) => {
+            if (err) {
+                next(err);
+            }
+            res.locals.wish = wish || [];
+        });
         res.locals.admin = req.user.status === 'admin';
         res.locals.staff = req.user.status === 'staff';
     }
@@ -68,22 +83,31 @@ app.use('/cart', cart);
 app.use('/user', users);
 app.use('/dashboard', dashboard);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
+// catch 404
+app.use('*', function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
-    next(err);
+
+    // render the error page
+    res.status(404);
+    res.render('error', {
+        title: `Error ${res.statusCode}`,
+        message: err.message,
+        error: err
+    });
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    debug('error handler - req.statusCode: %s', req.statusCode);
+    debug('error handler - res.statusCode: %s', res.statusCode);
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    res.render('error', {
+        title: `Error ${res.statusCode}`,
+        error: err
+    });
 });
 
 module.exports = app;

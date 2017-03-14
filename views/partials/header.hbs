@@ -10,13 +10,21 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
           <a href="/shop/">
-            <i class="fa fa-shopping-bag" aria-hidden="true"></i> Shop
+            <i class="fa fa-shopping-bag" aria-hidden="true"></i> Products
           </a>
         </li>
         <li>
           <a href="/cart/">
             <i class="fa fa-shopping-cart" aria-hidden="true"></i> Shopping Cart
             <span class="badge">{{session.cart.totalQty}}</span>
+          </a>
+        </li>
+        <li>
+          <a href="/user/profile/#wishlist">
+            <i class="fa fa-heart" aria-hidden="true"></i> Wishlist
+            {{#if wish}}
+            <span class="badge">{{wish.length}}</span>
+            {{/if}}
           </a>
         </li>
         <li class="dropdown">

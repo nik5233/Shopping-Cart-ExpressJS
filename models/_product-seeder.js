@@ -1,6 +1,6 @@
 var Product = require('./products');
 var mongoose = require('mongoose');
-var url = require('./mongo.config');
+var url = require('../config/app.config')['development'].db.url();
 
 mongoose.connect(url, () => {
     console.log(`Connected with DataBase: ${url}`);

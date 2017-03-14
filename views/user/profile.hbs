@@ -16,11 +16,14 @@
         <h3>Address</h3>
         <div>
             {{#if user.address.street}}
-            <p>Addres: 
-                {{user.address.street}} {{user.address.building}}{{#if user.address.appartament}}/{{user.address.appartament}}{{/if}} {{user.address.city}},{{user.address.region}} {{user.address.zip}} {{user.address.country}}</p>
-                {{else}}
+            <address>
+                <p>{{user.address.street}} {{user.address.building}}{{#if user.address.appartament}}/{{user.address.appartament}}{{/if}}</p>
+                <p>{{user.address.city}}, {{user.address.region}} {{user.address.zip}}</p>
+                <p>{{user.address.country}}</p>
+            </address>
+            {{else}}
                 <p class="alert alert-warning">Please, assign your address for delivery</p>
-                {{/if}}
+            {{/if}}
         </div>
         <a href="/user/update/address" type="button" class="btn btn-success">Update Address</a>
         <hr>
@@ -30,7 +33,29 @@
         </div>
         <a href="/user/update/card" type="button" class="btn btn-success">Update Card</a>
         <hr>
-        <h2>My Orders</h2>
+        <h2 id="wishlist">My Wishlist</h2>
+        {{#if wish}}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <ul class="list-group">
+                    {{#each wish}}
+                        <li class="list-group-item">
+                            {{!--<span class="badge">${{this.product.price}}</span>--}}
+                            <a href="/shop/product/{{this.product._id}}" type="button" class="btn btn-success">{{this.product.title}}</a>
+                            <a href="/user/unlike/{{this._id}}" type="button" class="btn btn-success pull-right">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        {{else}}
+            <p class="alert alert-warning">You nothing add to wishlist yet...</p>
+        {{/if}}
+        <hr>
+        <h2 id="orders">My Orders</h2>
+        {{#if orders}}
         {{#each orders}}
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -48,5 +73,8 @@
                 </div>
             </div>
         {{/each}}
+        {{else}}
+            <p class="alert alert-warning">You nothing bought yet...</p>
+        {{/if}}
     </div>
 </div>

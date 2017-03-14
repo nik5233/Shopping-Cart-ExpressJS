@@ -6,6 +6,7 @@ var passport = require('passport');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
 var User = require('../models/users');
+var Wish = require('../models/wish');
 
 var csrfProtection = csrf();
 router.use(csrfProtection);
@@ -104,6 +105,16 @@ router.post('/update/:id', isLoggedIn, function(req, res, next) {
                 }
             }
             updateUser(isUpdated, user, curUser, req, res);
+        }
+    });
+});
+
+router.get('/unlike/:id', isLoggedIn, function(req, res, next) {
+    Wish.findByIdAndRemove(req.params.id, (err, result) => {
+        if (err) {
+            next(err);
+        } else {
+            res.redirect('/user/profile/#wishlist');
         }
     });
 });
