@@ -5,6 +5,10 @@
             <h1>Update Account</h1>
             {{> messages}}
             <div class="form-group">
+                <label for="username">Name</label>
+                <input type="username" id="username" name="username" class="form-control" value="{{user.username}}">
+            </div>
+            <div class="form-group">
                 <label for="email">E-Mail</label>
                 <input type="email" id="email" name="email" class="form-control" value="{{user.email}}">
             </div>
@@ -38,21 +42,6 @@
                 <input type="text" id="building" name="building" class="form-control" value="{{user.address.building}}">
                 <label for="appartament">Appartament</label>
                 <input type="text" id="appartament" name="appartament" class="form-control" value="{{user.address.appartament}}">
-            </div>
-            {{/if}}
-            {{#if card}}
-            <h1>Update Card</h1>
-            <div class="form-group">
-                <label for="name">Cardholder Name</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{user.card.name}}">
-                <label for="number">Card Number</label>
-                <input type="text" id="number" name="number" class="form-control" value="{{user.card.number}}">
-                <label for="month">Expiration Month</label>
-                <input type="text" id="month" name="month" class="form-control" value="{{user.card.month}}">
-                <label for="year">Expiration Year</label>
-                <input type="text" id="year" name="year" class="form-control" value="{{user.card.year}}">
-                <label for="cvc">CVC</label>
-                <input type="text" id="cvc" name="cvc" class="form-control" value="{{user.card.cvc}}">
             </div>
             {{/if}}
             <input type="hidden" name="_csrf" value="{{csrfToken}}">

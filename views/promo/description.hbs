@@ -1,0 +1,48 @@
+{{>messages}}
+<h1><a href="/promo/{{promos._id}}">{{promos.title}}</a></h1>
+<p>Discount: {{promos.discount}}%</p>
+<p>Start: {{promos.start}}</p>
+<p>End: {{promos.end}}</p>
+<p>Description: {{promos.body}}</p>
+<form id="delete" action="/promo/del" method="post">
+    <input type="text" name="id" value="{{promos._id}}" hidden>
+</form>
+
+<form id="update" action="/promo/{{promos._id}}" method="post">
+    <input type="text" name="title" placeholder="Title" value="{{promos.title}}" required>
+    <input type="text" name="body" placeholder="Some description" value="{{promos.body}}" required>
+    <input type="number" name="discount" min="0" max="99" placeholder="%" value="{{promos.discount}}" required>
+    <input type="date" name="start" placeholder="Start" value="{{promos.start}}" required>
+    <input type="date" name="end" placeholder="End" value="{{promos.end}}" required>
+    <section class="form-group">
+        <table class="table table-striped">
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Have any promo?</th>
+            </tr>
+        {{#each checked}}
+            <tr>
+                <td><input id="{{this._id}}" type="checkbox" name="products" value="{{this._id}}" checked></td>
+                <td><label for="{{this._id}}">{{this.title}}</label></td>
+                <td>{{this.stock}}</td>
+                <td>{{this.price}}</td>
+                <td>True or False</td>
+            </tr>
+        {{/each}}
+        {{#each unchecked}}
+            <tr>
+                <td><input id="{{this._id}}" type="checkbox" name="products" value="{{this._id}}"></td>
+                <td><label for="{{this._id}}">{{this.title}}</label></td>
+                <td>{{this.stock}}</td>
+                <td>{{this.price}}</td>
+                <td>True or False</td>
+            </tr>
+        {{/each}}
+        </table>
+    </section>
+</form>
+<button form="update" class="btn btn-success" type="submit">Update</button>
+<button form="delete" class="btn btn-danger" type="submit"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>

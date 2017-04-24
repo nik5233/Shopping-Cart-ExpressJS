@@ -8,15 +8,16 @@ module.exports = function Cart(oldCart) {
         var qty = +body.qty || 1;
         var platform = body.platform;
         var addon = body.addon; // Array
+        var priceField = item.discount ? 'newPrice' : 'price'; // 'price' || 'newPrice'
 
         var storedItem = this.items[id];
         if (!storedItem) {
             storedItem = this.items[id] = { item: item, qty: 0, price: 0 };
         }
-        storedItem.qty += qty; // Qty of one product
-        storedItem.price = storedItem.item.price * storedItem.qty; // Total price of one product
+        storedItem.qty += qty; // Qty of added product
+        storedItem.price = Math.round(item[priceField] * storedItem.qty * 100) / 100; // Total price of one product
+        this.totalPrice += Math.round(item[priceField] * qty * 100) / 100; // Total price of cart
         this.totalQty += qty; // Qty of products in cart
-        this.totalPrice += storedItem.item.price * qty; // Total price of cart
     };
 
     this.reduceByOne = function(id) {
@@ -43,5 +44,17 @@ module.exports = function Cart(oldCart) {
             arr.push(this.items[id]);
         }
         return arr;
+    };
+
+    this.productIds = function() {
+        return Object.keys(this.items);
+    };
+
+    this.minQty = function() {
+        var arr = [];
+        for (var id in this.items) {
+            arr.push(+this.items[id].qty);
+        }
+        return Math.min(...arr);
     };
 };

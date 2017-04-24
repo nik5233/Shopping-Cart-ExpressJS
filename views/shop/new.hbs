@@ -1,0 +1,46 @@
+<h1>New Product</h1>
+<form class="form-group" action="/shop/new" method="post">
+{{#each fields}}
+<div class="input-group input-group-sm">
+  <span class="input-group-addon" id="sizing-addon3">{{this.name}}</span>
+  <input type="text" class="form-control" name="{{this.name}}" placeholder="{{this.plh}}" aria-describedby="sizing-addon3">
+</div>
+{{/each}}
+<div class="input-group input-group-sm">
+  <span class="input-group-addon" id="sizing-addon3">Price</span>
+  <input type="number" class="form-control" name="price" step="0.05" min="0" value="0.1" aria-describedby="sizing-addon3">
+</div>
+<div class="input-group input-group-sm">
+  <span class="input-group-addon" id="sizing-addon3">Platforms</span>
+  {{#each platforms}}
+  <input id="{{this}}" type="checkbox" name="platforms" value="{{this}}" hidden>
+  <label class="label label-default" for="{{this}}">{{this}}</label>
+  {{/each}}
+</div>
+<div class="input-group input-group-sm">
+  <span class="input-group-addon" id="sizing-addon3">Genre</span>
+  {{#each genre}}
+  <input id="{{this}}" type="checkbox" name="genre" value="{{this}}" hidden>
+  <label class="label label-default" for="{{this}}">{{this}}</label>
+  {{/each}}
+</div>
+<section class="col-md-6">
+    <h2>Minimal</h2>
+    {{#each requirements}}
+    <div class="input-group input-group-sm">
+        <span class="input-group-addon" id="sizing-addon3">{{this.name}}</span>
+        <input type="text" class="form-control" name="min-{{this.name}}" placeholder="{{this.plh}}" aria-describedby="sizing-addon3">
+    </div>
+    {{/each}}
+</section>
+<section class="col-md-6">
+    <h2>Recommended</h2>
+    {{#each requirements}}
+    <div class="input-group input-group-sm">
+        <span class="input-group-addon" id="sizing-addon3">{{this.name}}</span>
+        <input type="text" class="form-control" name="rec-{{this.name}}" placeholder="{{this.plh}}" aria-describedby="sizing-addon3">
+    </div>
+    {{/each}}
+</section>
+<button class="btn btn-success" type="submit">Add to DataBase</button>
+</form>

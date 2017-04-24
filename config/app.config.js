@@ -15,13 +15,11 @@ module.exports = {
     development: {
         port: 3000,
         db: {
-            name: 'main',
-            host: 'ds011442.mlab.com',
-            port: 11442,
-            user: 'OjyyRJZk',
-            password: '2D86VZgQ',
+            name: 'local',
+            host: '127.0.0.1',
+            port: 27017,
             url() {
-                return `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.name}`;
+                return `mongodb://${this.host}:${this.port}/${this.name}`;
             }
         }
     },

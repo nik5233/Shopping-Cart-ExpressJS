@@ -1,57 +1,173 @@
 <article>
+    {{>messages}}
     <header class="row">
-        <div class="col-md-10 col-md-offset-1 cart-product">
-            <img src="{{product.imagePath}}" alt="...">
-            <h1>{{product.title}}</h1>
+            <img class="col-md-3" src="{{product.imagePath}}" alt="...">
+            <h1>{{product.title}} {{#if product.discount}}<small class="badge">Discount: {{product.discount}}%</small>{{/if}}</h1>
+            {{#if product.rating}}
+            <p id="rating">Rating: {{product.rating}}</p>
+            {{/if}}
+            <p id="qrcode">QR Code: {{product.qrCode}}</p>
+            <section>
+                {{#if product.platforms}}
+                <p><span id="genre">Genre:</span>{{#each product.genre}} <a href="#" class="label label-default">{{this}}</a>{{/each}}
+                {{/if}} <span id="whishers">Wishers:</span> {{product.wishers}}</p>
+            </section>
             <form action="/shop/cart/{{product._id}}" method="post">
+                {{#if product.platforms}}
                 <section id="platform">
-                    <span>Platform:</span>
-                    <input id="pc" type="radio" name="platform" value="pc" required hidden>
-                    <label class="label label-default" for="pc">PC</label>
-                    <input id="psp" type="radio" name="platform" value="psp" required hidden>
-                    <label class="label label-default" for="psp">PSP4</label>
-                    <input id="xbox" type="radio" name="platform" value="xbox" required hidden>
-                    <label class="label label-default" for="xbox">XBOX</label>
-                    <span class="msg">check one of this</span>
+                    <p><span>Platform:</span>
+                    {{#each product.platforms}}
+                    <input id="{{this}}" type="radio" name="platform" value="{{this}}" required hidden>
+                    <label class="label label-default" for="{{this}}">{{this}}</label>
+                    {{/each}}
+                    <span class="msg">check one of this</span></p>
                 </section>
+                {{/if}}
+                {{!--{{#if product.addons}}
                 <section id="addon">
                     <span>Addons:</span>
-                    <input id="add#1" type="checkbox" name="addon" value="addon1">
-                    <label class="label label-default" for="add#1">Burning Crusader</label>
-                    <input id="add#2" type="checkbox" name="addon" value="addon2">
-                    <label class="label label-default" for="add#2">Lich King</label>
-                    <input id="add#3" type="checkbox" name="addon" value="addon3">
-                    <label class="label label-default" for="add#3">Cataclysm</label>
+                    {{#each product.platforms}}
+                    <input id="{{this}}" type="checkbox" name="addon" value="{{this}}">
+                    <label class="label label-default" for="{{this}}">{{this}}</label>
+                    {{/each}}
                 </section>
+                {{/if}}--}}
+                {{#if product.stock}}
                 <section id="qty">
                     <span>Qty:</span>
-                    <input type="number" step="1" name="qty" min="1" value="1">
+                    <input type="number" step="1" name="qty" min="1" max="{{product.stock}}" value="1"> 
+                    <span>Available items:</span> {{product.stock}}
                 </section>
-                <p class="price"><small><i class="fa fa-usd" aria-hidden="true"></i></small><strong>{{product.price}}</strong></p>
+                <p class="price"><strong>Total: </strong><small><i class="fa fa-usd" aria-hidden="true"></i></small><strong>
+                    {{#if product.discount}}
+                    {{product.newPrice}}
+                    {{else}}
+                    {{product.price}}
+                    {{/if}}
+                    </strong></p>
                 <button class="btn btn-success" type="submit">Add to Cart</button>
                 <a class="btn btn-success" href="#">{{!--/add/:id--}}
                     Buy Now
                 </a>
+                {{else}}
+                <p class="price"><strong>Price: </strong><small><i class="fa fa-usd" aria-hidden="true"></i></small><strong>{{product.price}}</strong></p>
+                <p class="alert alert-warning">Sorry, this product is not in stock.</p>
+                <a class="btn btn-success" href="#">{{!--/add/:id--}}
+                    Order
+                </a>
+                {{/if}}
             </form>
-        </div>
     </header>
+    <hr>
+    <section id="relevante">
+        <h3>HERE SHOW RELEVANTE PRODUCTS</h3>
+    </section>
     <hr>
     <section class="row">
         <div class="col-md-10 col-md-offset-1">
-            <section>
+            {{#if product.description}}
+            <section id="description" class="row">
                 <h3>Description</h3>
                 <p>{{product.description}}</p>
             </section>
-            <section>
-                <h3>Details</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis facere natus ad voluptatum aliquid, tempora libero vero quaerat minus, rem tempore maiores ab suscipit praesentium sint. Quibusdam mollitia nisi aliquid.</p>
+            {{/if}}
+            {{#if product.system}}
+            <section id="require" class="row">
+                <h3>System Requirements</h3>
+                <section id="minimal" class="col-md-6">
+                    <h4>Minimal</h4>
+                    <p>CPU: {{product.system.min.cpu}}</p>
+                    <p>RAM: {{product.system.min.ram}}</p>
+                    <p>VIDEO: {{product.system.min.video}}</p>
+                    <p>VIDEO RAM: {{product.system.min.vram}}</p>
+                    <p>DIRECTX: {{product.system.min.dx}}</p>
+                    <p>HDD SPACE: {{product.system.min.hdd}}</p>
+                    <p>OS: {{product.system.min.os}}</p>
+                </section>
+                <section id="recommended" class="col-md-6">
+                    <h4>Recommended</h4>
+                    <p>CPU: {{product.system.rec.cpu}}</p>
+                    <p>RAM: {{product.system.rec.ram}}</p>
+                    <p>VIDEO: {{product.system.rec.video}}</p>
+                    <p>VIDEO RAM: {{product.system.rec.vram}}</p>
+                    <p>DIRECTX: {{product.system.rec.dx}}</p>
+                    <p>HDD SPACE: {{product.system.rec.hdd}}</p>
+                    <p>OS: {{product.system.rec.os}}</p>
+                </section>
             </section>
-            <section>
+            {{/if}}
+            {{#if product.screenshots}}
+            <section id="screenshots" class="row">
+                <h3>Screenshots</h3>
+                {{#each product.screenshots}}
+                    <img src="{{this}}" class="col-md-4" alt="">
+                {{/each}}
+            </section>
+            {{/if}}
+            <section id="reviews" class="row">
                 <h3>Reviews</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, inventore quaerat esse accusantium harum obcaecati dolores voluptate nesciunt reprehenderit sunt.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi iure velit architecto optio vel est consequuntur voluptates, explicabo consequatur quia!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum quis debitis commodi praesentium animi at officia nam placeat, provident corporis.</p>
+                <form class="form-group" action="/shop/review" method="post">
+                    <input type="text" name="productId" value="{{product._id}}" hidden>
+                    <label>Good Side: </label>
+                    <input type="text" name="goodSide" maxlength="300">
+                    <label>Bad Side: </label>
+                    <input type="text" name="badSide" maxlength="300">
+                    <label>Addition: </label>
+                    <input type="text" name="addition" maxlength="300" required>
+                    <input type="radio" name="rating" value="1" id="rating#1">
+                    <label for="rating#1">1</label>
+                    <input type="radio" name="rating" value="2" id="rating#2">
+                    <label for="rating#2">2</label>
+                    <input type="radio" name="rating" value="3" id="rating#3" checked>
+                    <label for="rating#3">3</label>
+                    <input type="radio" name="rating" value="4" id="rating#4">
+                    <label for="rating#4">4</label>
+                    <input type="radio" name="rating" value="5" id="rating#5">
+                    <label for="rating#5">5</label>
+                    <input type="text" name="userId" value="{{user._id}}" hidden>
+                    <input type="text" name="username" value="{{user.username}}" hidden>
+                    <input type="text" name="city" value="{{user.address.city}}" hidden>
+                    <input type="checkbox" name="isShow" id="isShow" checked>
+                    <label for="isShow">Show your name and city?</label>
+                    <button class="btn btn-success" type="submit">Add Review</button>
+                </form>
+                <article class="col-md-offset-1">
+                    {{#if reviews}}
+                        {{#each reviews}}
+                        <hr>
+                            <article>
+                                <h5>{{#if this.isShow}}{{this.username}}
+                                    {{else}}User is prefer hidden about yourself{{/if}}, 
+                                    {{this.city}} <small class="badge">created: {{this.createAt}}</small></h5>
+                                <p><span class="label label-warning">Rating:</span> <i class="fa fa-star" aria-hidden="true"></i>
+{{this.rating}}</p>
+                                <p><span class="label label-success">Good side:</span> {{this.goodSide}}</p>
+                                <p><span class="label label-danger">Bad side:</span> {{this.badSide}}</p>
+                                <p><span class="label label-default">Total:</span> {{this.addition}}</p>
+                                {{!--<p><span class=""><i class="fa fa-lg fa-thumbs-o-up" aria-hidden="true"></i></span> {{this.relevante.yes}} /
+                                 <span class=""><i class="fa fa-lg fa-thumbs-o-down" aria-hidden="true"></i></span> {{this.relevante.no}}</p>--}}
+                                <p>
+                                    <form action="/shop/review/{{this._id}}/up" method="post">
+                                        <input type="text" name="reviewId" value="{{this._id}}" hidden>
+                                        <input type="text" name="productId" value="{{this.productId}}" hidden>
+                                        <button type="submit"><i class="fa fa-lg fa-thumbs-o-up" aria-hidden="true"></i> {{this.up}}</button>
+                                    </form>
+                                    <form action="/shop/review/{{this._id}}/down" method="post">
+                                        <input type="text" name="productId" value="{{this.productId}}" hidden>
+                                        <input type="text" name="reviewId" value="{{this._id}}" hidden>
+                                        <button type="submit"><i class="fa fa-lg fa-thumbs-o-down" aria-hidden="true"></i> {{this.down}}</button>
+                                    </form>
+                                </p>
+                            </article>
+                        {{/each}}
+                    {{else}}
+                    <img class="col-md-2" src="http://orig08.deviantart.net/c82b/f/2014/337/b/f/lol_poro__by_kyodashiro-d88jnfb.png" alt="poro">
+                    <p class="col-md-4 ">Please, leave your review here</p>
+                    {{/if}}
+                </article>
             </section>
+            <br>
+            <br>
         </div>
     </section>
 </article>

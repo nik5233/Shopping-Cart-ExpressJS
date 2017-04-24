@@ -6,20 +6,21 @@ var passport = require('passport');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
 var User = require('../models/users');
-var Wish = require('../models/wish');
+var Product = require('../models/products');
 
 var csrfProtection = csrf();
 router.use(csrfProtection);
 
 /* User Profile */
-router.get('/profile', isLoggedIn, function(req, res, next) {
+router.get('/profile', isLoggedIn, wishes, function(req, res, next) {
     var errMsg = req.flash('error');
     var sucMsg = req.flash('success');
-    Order.find({ user: req.user }, (err, orders) => {
+    Order.find({ userId: req.user._id }, (err, orders) => {
         if (err) {
-            res.write('Error!');
+            next(err);
         }
         var cart;
+        console.log(orders);
         orders.forEach(order => {
             cart = new Cart(order.cart);
             order.items = cart.generateArray();
@@ -31,7 +32,6 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
             hasError: errMsg.length > 0,
             sucMsg: sucMsg,
             hasSuccess: sucMsg.length > 0,
-            user: req.user
         });
     });
 });
@@ -69,6 +69,11 @@ router.post('/update/:id', isLoggedIn, function(req, res, next) {
         if (formName === 'account') {
             if (curUser.email !== newUser.email) {
                 curUser.email = newUser.email;
+                isUpdated = true;
+            }
+
+            if (curUser.username !== newUser.username) {
+                curUser.username = newUser.username;
                 isUpdated = true;
             }
 
@@ -110,11 +115,30 @@ router.post('/update/:id', isLoggedIn, function(req, res, next) {
 });
 
 router.get('/unlike/:id', isLoggedIn, function(req, res, next) {
-    Wish.findByIdAndRemove(req.params.id, (err, result) => {
+    var user = req.user;
+    var productId = req.params.id;
+    var index = user.wishlist.indexOf(productId);
+    user.wishlist.splice(index, 1);
+
+    User.findByIdAndUpdate(user._id, user, (err, user) => {
         if (err) {
             next(err);
         } else {
-            res.redirect('/user/profile/#wishlist');
+            Product.findById(productId, (err, product) => {
+                if (err) {
+                    next(err);
+                } else {
+                    product.wishers--;
+                    product.save((err, data) => {
+                        if (err) {
+                            next(err);
+                        } else {
+                            req.flash('success', `${data.title} deleted from wishlist`);
+                            res.redirect('/user/profile');
+                        }
+                    });
+                }
+            });
         }
     });
 });
@@ -215,4 +239,17 @@ function updateUser(isUpdated, user, curUser, req, res) {
         req.flash('success', 'No changes.');
         res.redirect('/user/profile');
     }
+}
+
+function wishes(req, res, next) {
+    Product.find({ _id: { $in: req.user.wishlist } }, (err, products) => {
+        if (err) {
+            console.log('### error');
+            return next(err);
+        } else {
+            console.log('### wish');
+            res.locals.wish = products;
+            return next();
+        }
+    });
 }

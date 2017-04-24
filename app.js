@@ -14,11 +14,11 @@ var MongoStore = require('connect-mongo')(session);
 var debug = require('debug')('mongoose');
 
 var index = require('./routes/index');
+var promo = require('./routes/promo');
 var users = require('./routes/users');
 var dashboard = require('./routes/dashboard');
 var product = require('./routes/product');
 var cart = require('./routes/cart');
-var Wish = require('./models/wish');
 
 var app = express();
 var env = app.get('env');
@@ -65,12 +65,7 @@ app.use(function(req, res, next) {
     res.locals.login = req.isAuthenticated();
     res.locals.session = req.session;
     if (res.locals.login) {
-        Wish.find({ 'user': req.user._id }, (err, wish) => {
-            if (err) {
-                next(err);
-            }
-            res.locals.wish = wish || [];
-        });
+        res.locals.user = req.user;
         res.locals.admin = req.user.status === 'admin';
         res.locals.staff = req.user.status === 'staff';
     }
@@ -79,6 +74,7 @@ app.use(function(req, res, next) {
 
 app.use('/', index);
 app.use('/shop', product);
+app.use('/promo', promo);
 app.use('/cart', cart);
 app.use('/user', users);
 app.use('/dashboard', dashboard);

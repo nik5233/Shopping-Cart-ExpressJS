@@ -1,0 +1,52 @@
+<h1>Order #{{order._id}} | {{#if order.isDelivered}}<span class="label label-success">Complete{{else}}<span class="label label-danger">In Progress{{/if}}</span></h1>
+<p>Payment ID: <span class="label label-primary">{{order.paymentId}}</span> | <small>Ordered: {{order.createAt}}</small></p>
+<hr>
+<h2>User</h2>
+<p>User Status: {{order.userStatus}}</p>
+<p>Tel: <a href="tel:+7{{orderUser.telephone}}">+7-{{orderUser.telephone}}</a> | Username: {{orderUser.username}} | Orders username: {{order.username}}</p>
+<p>Address: {{order.address}}</p>
+<hr>
+<h2>Cart</h2>
+<table class="table table-striped">
+    <tr>
+        <th>Title</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Total</th>
+    </tr>
+    {{#each order.cart.items}}
+    <tr>
+        <td>{{this.item.title}}</td>
+        <td>{{this.qty}}</td>
+        <td>{{this.item.price}}</td>
+        <td>{{this.price}}</td>
+    </tr>
+    {{/each}}
+    <tr>
+        <td><strong>Total:</strong></td>
+        <td><strong>{{order.cart.totalQty}}</strong></td>
+        <td><strong></strong></td>
+        <td><strong><small><i class="fa fa-usd" aria-hidden="true"></i></small> {{order.cart.totalPrice}}</strong></td>
+    </tr>
+</table>
+{{> messages}}
+{{#if order.isDelivered}}
+{{else}}
+    {{#if order.key1}}
+    <p>Key #2: {{order.key2}} | <small>This key should get the user on phone and it should hidden for staff and admin. This is necessary to complete the delivery.</small></p>
+    <form class="form-group" id="key" action="/dashboard/order/checkey" method="post">
+        <input type="text" name="key" maxlength="6">
+        <input type="text" name="id" value="{{order._id}}" hidden>
+        <button class="btn btn-success" type="submit">Check Key</button>
+    </form>
+    <form class="form-group" id="key" action="/dashboard/order/delkey" method="post">
+        <input type="text" name="id" value="{{order._id}}" hidden>
+        <button class="btn btn-danger" type="submit">Delete Key</button>
+    </form>
+    {{else}}
+    <form class="form-group" id="key" action="/dashboard/order/genkey" method="post">
+        <input type="text" name="id" value="{{order._id}}" hidden>
+        <button class="btn btn-primary" type="submit">Get Key</button>
+    </form>
+    {{/if}}
+{{/if}}

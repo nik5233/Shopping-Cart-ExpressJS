@@ -1,0 +1,54 @@
+<form action="/promo" method="post">
+    <input type="text" name="title" placeholder="Title" required>
+    <input type="text" name="body" placeholder="Some description" required>
+    <input type="number" name="discount" min="0" max="99" placeholder="%" required>
+    <input type="date" name="start" placeholder="Start" required>
+    <input type="date" name="end" placeholder="End" required>
+    <section class="form-group">
+        <table class="table table-striped">
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Have any promo?</th>
+            </tr>
+        {{#each products}}
+            <tr>
+                <td><input id="{{this._id}}" type="checkbox" name="products" value="{{this._id}}"></td>
+                <td><label for="{{this._id}}">{{this.title}}</label></td>
+                <td>{{this.stock}}</td>
+                <td>{{this.price}}</td>
+                <td>True or False</td>
+            </tr>
+        {{/each}}
+        </table>
+    </section>
+    <button class="btn btn-success" type="submit">Add Promo</button>
+</form>
+<br>
+<table class="table table-striped">
+    <tr>
+        <th>Title</th>
+        <th>Discount</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+{{#each promos}}
+    <tr>
+        <td><a href="/promo/{{this._id}}">{{this.title}}</a></td>
+        <td>{{this.discount}} %</td>
+        <td>{{this.start}}</td>
+        <td>{{this.end}}</td>
+        <td>{{this.body}}</td>
+        <td>
+            <form action="/promo/del" method="post">
+                <input type="text" name="id" value="{{this._id}}" hidden>
+                <button class="btn btn-danger" type="submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </form>
+        </td>
+    </tr>
+{{/each}}
+</table>

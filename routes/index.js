@@ -7,21 +7,15 @@ var Order = require('../models/order');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    var successMsg = req.flash('success')[0];
-    Product.find()
-        .then(products => {
-            res.render('index', {
-                title: 'Welcome'
-            });
-        });
+    var errMsg = req.flash('error');
+    var sucMsg = req.flash('success');
+    res.render('index', {
+        title: 'Welcome',
+        errMsg: errMsg,
+        hasError: errMsg.length > 0,
+        sucMsg: sucMsg,
+        hasSuccess: sucMsg.length > 0
+    });
 });
 
 module.exports = router;
-
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    req.session.oldUrl = req.url;
-    res.redirect('/user/signin');
-}

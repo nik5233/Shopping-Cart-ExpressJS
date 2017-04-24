@@ -1,0 +1,143 @@
+{{>messages}}
+<h2>All Orders</h2>
+<section id="orders">
+    <table class="table table-striped">
+        <tr>
+            <th>Cart</th>
+            <th>CreateAt</th>
+            <th>Delivery</th>
+            <th>Username(ID)</th>
+            <th>PaymentId</th>
+            <th>Status</th>
+        </tr>
+    {{#each orders}}
+        <tr>
+            <td><a href="/dashboard/order/{{this._id}}">Show order</a></td>
+            <td>{{this.createAt}}</td>
+            <td>{{#if this.isDelivered}}<span class="label label-success">Complete{{else}}<span class="label label-danger">In progress{{/if}}</span></td>
+            <td>{{this.username}}(<a href="/user/{{this.userId}}">{{this.userId}}</a>)</td>
+            <td>{{this.paymentId}}</td>
+            <td>{{this.userStatus}}</td>
+        </tr>
+    {{/each}}
+    </table>
+</section>
+<hr>
+<h2>All Feedbacks</h2>
+<hr>
+<h2>Currently Promotions | <a href="/promo/all">All</a></h2>
+{{#if promos}}
+<table class="table table-striped">
+    <tr>
+        <th>Title</th>
+        <th>Discount</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+{{#each promos}}
+    <tr>
+        <td><a href="/promo/{{this._id}}">{{this.title}}</a></td>
+        <td>{{this.discount}} %</td>
+        <td>{{this.start}}</td>
+        <td>{{this.end}}</td>
+        <td>{{this.body}}</td>
+        <td>
+            <form action="/promo/del" method="post">
+                <input type="text" name="id" value="{{this._id}}" hidden>
+                <button class="btn btn-danger" type="submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </form>
+        </td>
+    </tr>
+{{/each}}
+</table>
+<a class="btn btn-primary" href="/promo/all">New Promo</a>
+{{else}}
+<a class="btn btn-primary" href="/promo/all">New Promo</a>
+{{/if}}
+<hr>
+<h2>All Products</h2>
+{{#if products}}
+<section id="products">
+    <table class="table table-striped">
+        <tr>
+            <th></th>
+            <th>Title</th>
+            <th>Stock</th>
+            <th>Developers</th>
+            <th>Genre</th>
+            <th>Platforms</th>
+            <th>Discount</th>
+            <th>Wishers</th>
+            <th>Purchaes</th>
+            <th>Sold</th>
+            <th>Actions</th>
+        </tr>
+    {{#each products}}
+        <tr>
+            <td><input id="{{this._id}}" type="checkbox" name="product" value="{{this._id}}"></td>
+            <td><a href="/shop/product/{{this._id}}">{{this.title}}</a></td>
+            <td>{{this.stock}}</td>
+            <td>{{this.developers}}</td>
+            <td>{{this.genre}}</td>
+            <td>{{this.platforms}}</td>
+            <td>{{this.discount}}</td>
+            <td>{{this.wishers}}</td>
+            <td>{{this.purchases}}</td>
+            <td>{{this.sold}}</td>
+            <td>
+                <a class="btn btn-success" href="/shop/product/{{this._id}}/upd"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <form action="/shop/del/{{this._id}}" method="post">
+                    <input type="text" name="id" value="{{this._id}}" required hidden>
+                    <button class="btn btn-danger" type="submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                </form>
+            </td>
+        </tr>
+    {{/each}}
+    </table>
+    <a class="btn btn-primary" href="/shop/new">+ Product</a>
+</section>
+{{else}}
+    <a class="btn btn-primary" href="/shop/new">New Product</a>
+{{/if}}
+{{#if admin}}
+<h2>All Users</h2>
+<form action="/dashboard/user/find" method="post">
+    <input type="text" name="query" placeholder="Usernane, email or phone" required>
+    <button class="btn btn-success" type="submit">Search</button>
+</form>
+<section id="users">
+    <table class="table table-striped">
+        <tr>
+            <th></th>
+            <th><a href="/dashboard/user/sort=username#users">Username</a></th>
+            <th><a href="/dashboard/user/sort=email#users">Email</a></th>
+            <th><a href="/dashboard/user/sort=status#users">Status</a></th>
+            <th><a href="/dashboard/user/sort=telephone#users">Telephone</a></th>
+            <th>Action</th>
+        </tr>
+    {{#each users}}
+        <tr>
+            <td><input id="{{this._id}}" type="checkbox" name="user" value="{{this._id}}"></td>
+            <td>{{this.username}}</a></td>
+            <td>{{this.email}}</td>
+            <td>
+                <form {{!--id="{{this._id}}"--}} action="/dashboard/user/upd" method="post">
+                    <input type="text" name="status" value="{{this.status}}">
+                    <input type="text" name="id" value="{{this._id}}" hidden>
+                    <button class="btn btn-success" type="submit"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                </form>
+            </td>
+            <td>{{this.telephone}}</td>
+            <td>
+                <form {{!--id="{{this._id}}"--}} action="/dashboard/user/del" method="post">
+                    <input type="text" name="id" value="{{this._id}}" hidden>
+                    <button class="btn btn-danger" type="submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                </form>
+            </td>
+        </tr>
+    {{/each}}
+    </table>
+</section>
+{{/if}}

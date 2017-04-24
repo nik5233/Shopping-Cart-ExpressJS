@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <h1>My Profile</h1>
+        <h1>Hello, {{user.username}}</h1>
         {{> messages}}
         <hr>
         <h3>Account</h3>
@@ -17,7 +17,7 @@
         <div>
             {{#if user.address.street}}
             <address>
-                <p>{{user.address.street}} {{user.address.building}}{{#if user.address.appartament}}/{{user.address.appartament}}{{/if}}</p>
+                <p>{{user.address.building}} {{user.address.street}} str.{{#if user.address.appartament}}, apt. {{user.address.appartament}}{{/if}}</p>
                 <p>{{user.address.city}}, {{user.address.region}} {{user.address.zip}}</p>
                 <p>{{user.address.country}}</p>
             </address>
@@ -27,12 +27,6 @@
         </div>
         <a href="/user/update/address" type="button" class="btn btn-success">Update Address</a>
         <hr>
-        <h3>Card</h3>
-        <div>
-            <p>Card: {{user.card.number}}</p>
-        </div>
-        <a href="/user/update/card" type="button" class="btn btn-success">Update Card</a>
-        <hr>
         <h2 id="wishlist">My Wishlist</h2>
         {{#if wish}}
         <div class="panel panel-default">
@@ -41,7 +35,7 @@
                     {{#each wish}}
                         <li class="list-group-item">
                             {{!--<span class="badge">${{this.product.price}}</span>--}}
-                            <a href="/shop/product/{{this.product._id}}" type="button" class="btn btn-success">{{this.product.title}}</a>
+                            <a href="/shop/product/{{this._id}}" type="button" class="btn btn-success">{{this.title}}</a>
                             <a href="/user/unlike/{{this._id}}" type="button" class="btn btn-success pull-right">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </a>
