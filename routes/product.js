@@ -37,7 +37,7 @@ router.get('/', promo, review, product, addFields, function(req, res, next) {
  *  check entries, concat query path and then
  *  continue action to this route
  */
-router.get('/filter', function(req, res, next) {
+router.get('/filter', promo, review, product, addFields, function(req, res, next) {
     var body = req.query;
     console.log(body);
     var products = res.locals.products;
